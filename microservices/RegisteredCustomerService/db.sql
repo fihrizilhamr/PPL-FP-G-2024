@@ -36,11 +36,12 @@ CREATE TABLE review (
     destination_id INT,
     user_id INT,
     rating INT,
-    title VARCHAR(255),
     description TEXT,
+    image_path VARCHAR(255),
     datetime DATETIME,
     FOREIGN KEY (user_id) REFERENCES registered_customer(id)
 );
+
 
 INSERT INTO ticket (name, price, status, description) VALUES
 ('Penerbangan ke Bali', 1500000.00, 1, 'Penerbangan langsung ke Bali'),

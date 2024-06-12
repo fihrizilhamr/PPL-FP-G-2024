@@ -10,7 +10,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $gender = $_POST['gender'];
     $phonenumber = $_POST['phonenumber'];
 
+    
     $customer = RegisteredCustomerFactory::createRegisteredCustomer($username, $password, $email, $name, $birthdate, $gender, $phonenumber);
+    $observer = new CustomerObserver();
+    $customer->attach($observer);
     $customer->save();
 
     echo "Registration successful!";

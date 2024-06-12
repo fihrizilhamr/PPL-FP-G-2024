@@ -30,8 +30,42 @@ class RegisteredCustomerFactory {
     }
 }
 
+// Observer interface
+interface Observer {
+    public function update($data);
+}
+
+// Subject class
+abstract class Subject {
+    private $observers = [];
+
+    public function attach(Observer $observer) {
+        $this->observers[] = $observer;
+    }
+
+    public function detach(Observer $observer) {
+        $this->observers = array_filter($this->observers, function($o) use ($observer) {
+            return $o !== $observer;
+        });
+    }
+
+    protected function notify($data) {
+        foreach ($this->observers as $observer) {
+            $observer->update($data);
+        }
+    }
+}
+
+// Concrete Observer
+class CustomerObserver implements Observer {
+    public function update($data) {
+        // Implement logic for what happens when a customer is updated
+        echo "Customer data has been updated: " . json_encode($data) . "\n";
+    }
+}
+
 // RegisteredCustomer class
-class RegisteredCustomer {
+class RegisteredCustomer extends Subject {
     private $username;
     private $password;
     private $email;
@@ -56,6 +90,8 @@ class RegisteredCustomer {
         $stmt->bind_param("sssssss", $this->username, $this->password, $this->email, $this->name, $this->birthdate, $this->gender, $this->phonenumber);
         $stmt->execute();
         $stmt->close();
+
+        $this->notify(['action' => 'save', 'username' => $this->username]);
     }
 
     public function login($username, $password) {
@@ -79,8 +115,6 @@ class RegisteredCustomer {
         $stmt->close();
         return $tickets;
     }
-    
-    
 
     public function addTicketToCart($ticket_id, $user_id, $amount, $datetime) {
         $db = Database::getInstance()->getConnection();
@@ -88,6 +122,8 @@ class RegisteredCustomer {
         $stmt->bind_param("siis", $ticket_id, $user_id, $amount, $datetime);
         $stmt->execute();
         $stmt->close();
+
+        $this->notify(['action' => 'addTicketToCart', 'ticket_id' => $ticket_id, 'user_id' => $user_id]);
     }
 
     public function deleteTicketFromCart($purchase_id) {
@@ -96,14 +132,18 @@ class RegisteredCustomer {
         $stmt->bind_param("i", $purchase_id);
         $stmt->execute();
         $stmt->close();
+
+        $this->notify(['action' => 'deleteTicketFromCart', 'purchase_id' => $purchase_id]);
     }
 
-    public function makeReview($dest_id, $user_id, $rating, $title, $description, $datetime) {
+    public function makeReview($dest_id, $user_id, $rating, $description, $image_path, $datetime) {
         $db = Database::getInstance()->getConnection();
-        $stmt = $db->prepare("INSERT INTO review (destination_id, user_id, rating, title, description, datetime) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("siisss", $dest_id, $user_id, $rating, $title, $description, $datetime);
+        $stmt = $db->prepare("INSERT INTO review (destination_id, user_id, rating, description, image_path, datetime) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("siisss", $dest_id, $user_id, $rating, $description, $image_path, $datetime);
         $stmt->execute();
         $stmt->close();
+
+        $this->notify(['action' => 'makeReview', 'dest_id' => $dest_id, 'user_id' => $user_id]);
     }
 
     public function removeReview($review_id) {
@@ -112,6 +152,8 @@ class RegisteredCustomer {
         $stmt->bind_param("i", $review_id);
         $stmt->execute();
         $stmt->close();
+
+        $this->notify(['action' => 'removeReview', 'review_id' => $review_id]);
     }
 }
 ?>

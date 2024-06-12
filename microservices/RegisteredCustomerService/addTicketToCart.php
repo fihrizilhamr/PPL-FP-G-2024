@@ -8,7 +8,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $datetime = $_POST['datetime'];
     $user_id = 1;
     $registeredCustomer = new RegisteredCustomer("username", "password", "email", "name", "birthdate", "gender", "phonenumber"); // Replace with actual user data
-
+    $observer = new CustomerObserver();
+    $registeredCustomer->attach($observer);
     $registeredCustomer->addTicketToCart($ticket_id, $user_id, $amount, $datetime);
 
     echo "Ticket added to cart.";
