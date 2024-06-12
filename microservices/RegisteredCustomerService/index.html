@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Booking System</title>
+</head>
+<body>
+    <h1>Travel Booking System</h1>
+    <h2>Register</h2>
+    <form action="register.php" method="POST">
+        <input type="text" name="username" placeholder="Username" required><br>
+        <input type="password" name="password" placeholder="Password" required><br>
+        <input type="email" name="email" placeholder="Email" required><br>
+        <input type="text" name="name" placeholder="Name" required><br>
+        <input type="date" name="birthdate" placeholder="Birthdate" required><br>
+        <label for="gender">Gender:</label>
+        <input type="radio" id="male" name="gender" value="1" required>
+        <label for="male">Male</label>
+        <input type="radio" id="female" name="gender" value="0" required>
+        <label for="female">Female</label><br>
+        <input type="text" name="phonenumber" placeholder="Phone Number" required><br>
+        <button type="submit">Register</button>
+    </form>
+
+    <h2>Login</h2>
+    <form action="login.php" method="POST">
+        <input type="text" name="username" placeholder="Username" required><br>
+        <input type="password" name="password" placeholder="Password" required><br>
+        <button type="submit">Login</button>
+    </form>
+
+    <h2>Search Ticket</h2>
+    <form action="searchTicket.php" method="POST">
+        <label for="name">Ticket Name:</label>
+        <input type="text" id="name" name="name" required>
+        <button type="submit">Search</button>
+    </form>
+
+    <h2>Add Ticket to Cart</h2>
+    <form action="addTicketToCart.php" method="POST">
+        <label for="ticket_id">Ticket ID:</label>
+        <input type="text" id="ticket_id" name="ticket_id" required>
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" required>
+        <label for="datetime">Datetime:</label>
+        <input type="datetime-local" id="datetime" name="datetime" required>
+        <button type="submit">Add to Cart</button>
+    </form>
+
+    <h2>Delete Ticket from Cart</h2>
+    <form action="deleteTicketFromCart.php" method="POST">
+        <label for="purchase_id">Purchase ID:</label>
+        <input type="number" id="purchase_id" name="purchase_id" required>
+        <button type="submit">Delete from Cart</button>
+    </form>
+
+    <h2>Make Review</h2>
+    <form action="makeReview.php" method="POST">
+        <label for="dest_id">Destination ID:</label>
+        <input type="text" id="dest_id" name="dest_id" required>
+        <label for="rating">Rating:</label>
+        <input type="number" id="rating" name="rating" min="1" max="5" required>
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required></textarea>
+        <label for="datetime">Datetime:</label>
+        <input type="datetime-local" id="datetime" name="datetime" required>
+        <button type="submit">Submit Review</button>
+    </form>
+
+    <h2>Remove Review</h2>
+    <form action="removeReview.php" method="POST">
+        <label for="review_id">Review ID:</label>
+        <input type="number" id="review_id" name="review_id" required>
+        <button type="submit">Remove Review</button>
+    </form>
+</body>
+</html>
