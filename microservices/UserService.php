@@ -1,0 +1,127 @@
+// UserService.php
+
+class UserService {
+    private static $instance = null;
+    
+    private function __construct() { }
+    
+    public static function getInstance() {
+        if (self::$instance == null) {
+            self::$instance = new UserService();
+        }
+        return self::$instance;
+    }
+    
+    public function createUser($type, $data) {
+        if ($type == 'customer') {
+            return new RegisteredCustomer($data);
+        } elseif ($type == 'partner') {
+            return new BusinessPartner($data);
+        }
+    }
+}
+
+class RegisteredCustomer {
+    // Implementation of RegisteredCustomer attributes and methods
+}
+
+class BusinessPartner {
+    // Implementation of BusinessPartner attributes and methods
+}
+
+<?php
+// Singleton pattern for database connection
+class Database {
+    private static $instance = null;
+    private $connection;
+
+    private function __construct() {
+        $this->connection = new mysqli('localhost', 'user', 'password', 'database');
+    }
+
+    public static function getInstance() {
+        if (self::$instance == null) {
+            self::$instance = new Database();
+        }
+        return self::$instance;
+    }
+
+    public function getConnection() {
+        return $this->connection;
+    }
+}
+
+// Factory Method for creating customers
+class CustomerFactory {
+    public static function createCustomer($username, $password, $email, $name, $birthdate, $gender, $phonenumber) {
+        return new Customer($username, $password, $email, $name, $birthdate, $gender, $phonenumber);
+    }
+}
+
+// Customer class
+class Customer {
+    private $username;
+    private $password;
+    private $email;
+    private $name;
+    private $birthdate;
+    private $gender;
+    private $phonenumber;
+
+    public function __construct($username, $password, $email, $name, $birthdate, $gender, $phonenumber) {
+        $this->username = $username;
+        $this->password = $password;
+        $this->email = $email;
+        $this->name = $name;
+        $this->birthdate = $birthdate;
+        $this->gender = $gender;
+        $this->phonenumber = $phonenumber;
+    }
+
+    public function save() {
+        $db = Database::getInstance()->getConnection();
+        $stmt = $db->prepare("INSERT INTO customers (username, password, email, name, birthdate, gender, phonenumber) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssss", $this->username, $this->password, $this->email, $this->name, $this->birthdate, $this->gender, $this->phonenumber);
+        $stmt->execute();
+        $stmt->close();
+    }
+}
+?>
+class RegisteredCustomer {
+    public $rc_id;
+    public $rc_username;
+    public $rc_password;
+    public $rc_email;
+    public $rc_name;
+    public $rc_birthdate;
+    public $rc_gender;
+    public $rc_phonenumber;
+
+    public function login() { /* ... */ }
+    public function searchTicket() { /* ... */ }
+    public function addTicketToCart() { /* ... */ }
+    public function deleteTicketFromCart() { /* ... */ }
+    public function makePurchase() { /* ... */ }
+    public function confirmPayment() { /* ... */ }
+    public function cancelPurchase() { /* ... */ }
+    public function makeReview() { /* ... */ }
+    public function removeReview() { /* ... */ }
+}
+class UserService {
+    async createUser(data) {
+        // API call to User Service
+    }
+    async login(data) {
+        // API call to User Service
+    }
+    // Other methods...
+}
+class UserService {
+    public function createUser($username, $password, $email, $name, $birthdate, $gender, $phonenumber) {
+        // Implementation using Factory Pattern
+    }
+    public function login($username, $password) {
+        // Implementation
+    }
+    // Other methods...
+}
