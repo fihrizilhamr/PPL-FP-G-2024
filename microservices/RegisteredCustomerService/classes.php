@@ -26,7 +26,7 @@ class Database {
 // Factory Method for creating registered customers
 class RegisteredCustomerFactory {
     public static function createRegisteredCustomer($username, $password, $email, $name, $birthdate, $gender, $phonenumber) {
-        return new RegisteredCustomer($username, $password, $email, $name, $birthdate, $gender, $phonenumber);
+        return new RegisteredCustomerService($username, $password, $email, $name, $birthdate, $gender, $phonenumber);
     }
 }
 
@@ -64,8 +64,29 @@ class CustomerObserver implements Observer {
     }
 }
 
+class TicketObserver implements Observer {
+    public function update($data) {
+        // Implement logic for what happens when a customer is updated
+        echo "Ticket data has been updated: " . json_encode($data) . "\n";
+    }
+}
+
+class CartObserver implements Observer {
+    public function update($data) {
+        // Implement logic for what happens when a customer is updated
+        echo "Ticket data has been updated: " . json_encode($data) . "\n";
+    }
+}
+
+class ReviewObserver implements Observer {
+    public function update($data) {
+        // Implement logic for what happens when a customer is updated
+        echo "Ticket data has been updated: " . json_encode($data) . "\n";
+    }
+}
+
 // RegisteredCustomer class
-class RegisteredCustomer extends Subject {
+class RegisteredCustomerService extends Subject {
     private $username;
     private $password;
     private $email;
@@ -104,6 +125,8 @@ class RegisteredCustomer extends Subject {
         return $result->num_rows > 0;
     }
 
+}
+class TicketService extends Subject {
     public function searchTicket($substring) {
         $db = Database::getInstance()->getConnection();
         $stmt = $db->prepare("SELECT * FROM ticket WHERE name LIKE ? OR description LIKE ?");
@@ -115,7 +138,9 @@ class RegisteredCustomer extends Subject {
         $stmt->close();
         return $tickets;
     }
+}
 
+class CartService extends Subject {
     public function addTicketToCart($ticket_id, $user_id, $amount, $datetime) {
         $db = Database::getInstance()->getConnection();
         $stmt = $db->prepare("INSERT INTO ticket_purchase (ticket_id, user_id, ticket_amount, datetime) VALUES (?, ?, ?, ?)");
@@ -135,7 +160,8 @@ class RegisteredCustomer extends Subject {
 
         $this->notify(['action' => 'deleteTicketFromCart', 'purchase_id' => $purchase_id]);
     }
-
+}
+class ReviewService extends Subject {
     public function makeReview($dest_id, $user_id, $rating, $description, $image_path, $datetime) {
         $db = Database::getInstance()->getConnection();
         $stmt = $db->prepare("INSERT INTO review (destination_id, user_id, rating, description, image_path, datetime) VALUES (?, ?, ?, ?, ?, ?)");

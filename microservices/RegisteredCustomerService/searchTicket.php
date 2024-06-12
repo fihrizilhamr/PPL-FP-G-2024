@@ -4,7 +4,8 @@ include 'classes.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $name = $_POST['name'];
-    $registeredCustomer = new RegisteredCustomer("username", "password", "email", "name", "birthdate", "gender", "phonenumber"); // Replace with actual user data
+    // $registeredCustomer = new TicketService("username", "password", "email", "name", "birthdate", "gender", "phonenumber"); // Replace with actual user data
+    $registeredCustomer = new TicketService(); 
 
     $tickets = $registeredCustomer->searchTicket($name);
 

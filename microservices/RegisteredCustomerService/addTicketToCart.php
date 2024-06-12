@@ -7,8 +7,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $amount = $_POST['amount'];
     $datetime = $_POST['datetime'];
     $user_id = 1;
-    $registeredCustomer = new RegisteredCustomer("username", "password", "email", "name", "birthdate", "gender", "phonenumber"); // Replace with actual user data
-    $observer = new CustomerObserver();
+    // $registeredCustomer = new CartService("username", "password", "email", "name", "birthdate", "gender", "phonenumber"); // Replace with actual user data
+    $registeredCustomer = new CartService();
+    $observer = new CartObserver();
     $registeredCustomer->attach($observer);
     $registeredCustomer->addTicketToCart($ticket_id, $user_id, $amount, $datetime);
 
