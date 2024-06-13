@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $destination = $destinationService->getDestinationById($id);
 
     if (!empty($$destination)) {
-        echo "<h1>Search Results</h1><ul>";
+        echo "<h1>Search Results</h1>";
         echo "{$destination['picture']}";
 
     } else {
