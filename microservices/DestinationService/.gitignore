@@ -1,0 +1,77 @@
+# Composer
+/vendor/
+/composer.lock
+
+# PHPStorm / IntelliJ IDEA
+/.idea/
+/*.iml
+
+# VSCode
+/.vscode/
+
+# Symfony
+/var/
+/vendor/
+/public/bundles/
+/node_modules/
+/npm-debug.log
+/yarn-error.log
+
+# Laravel
+/node_modules/
+/public/hot
+/public/storage
+/storage/*.key
+/storage/app/public
+/storage/framework/cache/data
+/storage/logs
+/vendor
+/.env
+.phpunit.result.cache
+Homestead.yaml
+Homestead.json
+.env.backup
+.env.testing
+
+# Laravel 5 & Lumen specific
+/.vagrant
+Homestead.json
+Homestead.yaml
+ngrok.log
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+
+# phpunit
+.phpunit.result.cache
+
+# Ignore cache files for specific tools
+/.php_cs.cache
+
+# Ignore all test files
+/tests/
+
+# Ignore log files and databases
+*.log
+*.sql
+*.sqlite
+/.DS_Store
+
+# Ignore sensitive or platform-specific files
+/.env
+*.key
+
+# Ignore compiled sources
+/build/
+/out/
+
+# User-specific files
+*.swp
+*.swo
+*~
+.idea/
+nbproject/
