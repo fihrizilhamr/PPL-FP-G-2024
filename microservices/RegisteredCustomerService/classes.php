@@ -59,29 +59,25 @@ abstract class Subject {
 // Concrete Observer
 class CustomerObserver implements Observer {
     public function update($data) {
-        // Implement logic for what happens when a customer is updated
         echo "Customer data has been updated: " . json_encode($data) . "\n";
     }
 }
 
 class TicketObserver implements Observer {
     public function update($data) {
-        // Implement logic for what happens when a customer is updated
         echo "Ticket data has been updated: " . json_encode($data) . "\n";
     }
 }
 
 class CartObserver implements Observer {
     public function update($data) {
-        // Implement logic for what happens when a customer is updated
-        echo "Ticket data has been updated: " . json_encode($data) . "\n";
+        echo "Cart data has been updated: " . json_encode($data) . "\n";
     }
 }
 
 class ReviewObserver implements Observer {
     public function update($data) {
-        // Implement logic for what happens when a customer is updated
-        echo "Ticket data has been updated: " . json_encode($data) . "\n";
+        echo "Review data has been updated: " . json_encode($data) . "\n";
     }
 }
 
@@ -125,7 +121,17 @@ class RegisteredCustomerService extends Subject {
         return $result->num_rows > 0;
     }
 
+    public function editProfile($username, $password, $email, $name, $birthdate, $gender, $phonenumber) {
+        $db = Database::getInstance()->getConnection();
+        $stmt = $db->prepare("UPDATE registered_customer SET password = ?, email = ?, name = ?, birthdate = ?, gender = ?, phonenumber = ? WHERE username = ? AND password = ?");
+        $stmt->bind_param("ssssssss", $password, $email, $name, $birthdate, $gender, $phonenumber, $username, $password);
+        $stmt->execute();
+        $stmt->close();
+
+        $this->notify(['action' => 'editProfile', 'username' => $username]);
+    }
 }
+
 class TicketService extends Subject {
     public function searchTicket($substring) {
         $db = Database::getInstance()->getConnection();
@@ -161,6 +167,7 @@ class CartService extends Subject {
         $this->notify(['action' => 'deleteTicketFromCart', 'purchase_id' => $purchase_id]);
     }
 }
+
 class ReviewService extends Subject {
     public function makeReview($dest_id, $user_id, $rating, $description, $image_path, $datetime) {
         $db = Database::getInstance()->getConnection();
@@ -180,6 +187,19 @@ class ReviewService extends Subject {
         $stmt->close();
 
         $this->notify(['action' => 'removeReview', 'review_id' => $review_id]);
+    }
+
+    public function viewReview($review_id) {
+        $db = Database::getInstance()->getConnection();
+        $stmt = $db->prepare("SELECT * FROM review WHERE id = ?");
+        $stmt->bind_param("i", $review_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $review = $result->fetch_assoc();
+        $stmt->close();
+        
+        $this->notify(['action' => 'viewReview', 'review' => $review]);
+        return $review;
     }
 }
 ?>
