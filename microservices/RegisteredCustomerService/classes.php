@@ -166,6 +166,16 @@ class CartService extends Subject {
 
         $this->notify(['action' => 'deleteTicketFromCart', 'purchase_id' => $purchase_id]);
     }
+
+    public function editTicketInCart($purchase_id, $ticket_id, $amount, $datetime) {
+        $db = Database::getInstance()->getConnection();
+        $stmt = $db->prepare("UPDATE ticket_purchase SET ticket_id = ?, ticket_amount = ?, datetime = ? WHERE id = ?");
+        $stmt->bind_param("iisi", $ticket_id, $amount, $datetime, $purchase_id);
+        $stmt->execute();
+        $stmt->close();
+
+        $this->notify(['action' => 'editTicketInCart', 'purchase_id' => $purchase_id, 'ticket_id' => $ticket_id]);
+    }
 }
 
 class ReviewService extends Subject {
@@ -200,6 +210,16 @@ class ReviewService extends Subject {
         
         $this->notify(['action' => 'viewReview', 'review' => $review]);
         return $review;
+    }
+
+    public function editReview($review_id, $rating, $description, $image_path, $datetime) {
+        $db = Database::getInstance()->getConnection();
+        $stmt = $db->prepare("UPDATE review SET rating = ?, description = ?, image_path = ?, datetime = ? WHERE id = ?");
+        $stmt->bind_param("isssi", $rating, $description, $image_path, $datetime, $review_id);
+        $stmt->execute();
+        $stmt->close();
+
+        $this->notify(['action' => 'editReview', 'review_id' => $review_id]);
     }
 }
 ?>
