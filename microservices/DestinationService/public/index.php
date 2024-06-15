@@ -1,7 +1,6 @@
 <?php
 
 require __DIR__ . '/../vendor/autoload.php';
-require __DIR__ . '/../src/UserService.php';
 require __DIR__ . '/../src/DestinationService.php';
 
 $config = require __DIR__ . '/../config/config.php';
@@ -23,38 +22,6 @@ if (isset($parsedUrl['query'])) {
 }
 
 switch ($path) {
-    case '/register':
-        if ($requestMethod == 'POST') {
-            $data = json_decode(file_get_contents('php://input'), true);
-            $response = $userService->register($data['name'], $data['email'], $data['password']);
-            echo json_encode($response);
-        }
-        break;
-    case '/login':
-        if ($requestMethod == 'POST') {
-            $data = json_decode(file_get_contents('php://input'), true);
-            $response = $userService->login($data['email'], $data['password']);
-            echo json_encode($response);
-        }
-        break;
-    case '/profile':
-        if ($requestMethod == 'GET') {
-            if (isset($queryParams['id'])) {
-                $userId = $queryParams['id'];
-                $response = $userService->profile($userId);
-                if ($response) {
-                    echo json_encode($response);
-                } else {
-                    http_response_code(404);
-                    echo json_encode(['error' => 'User not found']);
-                }
-            } else {
-                http_response_code(400);
-                echo json_encode(['error' => 'User ID is required']);
-            }
-        }
-        break;
-
      case '/destinations':
         if ($requestMethod == 'GET') {
             $response = $destinationService->readAll();
