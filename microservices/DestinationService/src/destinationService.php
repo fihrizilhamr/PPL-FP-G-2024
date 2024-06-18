@@ -82,5 +82,17 @@ class DestinationService
         return ['id' => $id];
     }
 
+     // Search for destinations by name
+     public function searchDestination($name)
+     {
+        $stmt = $this->db->prepare("SELECT * FROM destinations WHERE name LIKE ?");
+        $stmt->execute(['%' . $name . '%']);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (empty($results)) {
+            return ['message' => 'No destinations found'];
+        }
+        return $results;
+     }
+
     
 }
