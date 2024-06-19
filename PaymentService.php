@@ -1,70 +1,26 @@
-// PaymentService.php
-
-abstract class Payment {
-    public function processPayment() {
-        $this->makePayment();
-        $this->confirmPayment();
-    }
-    
-    abstract protected function makePayment();
-    abstract protected function confirmPayment();
-}
-
-class CreditCardPayment extends Payment {
-    protected function makePayment() {
-        // Process credit card payment
-    }
-    
-    protected function confirmPayment() {
-        // Confirm credit card payment
-    }
-}
-
-<?php
-// Strategy pattern for payment methods
-interface PaymentMethod {
-    public function pay($amount);
-}
-
-class CreditCardPayment implements PaymentMethod {
-    public function pay($amount) {
-        // Logic for credit card payment
-    }
-}
-
-class PaypalPayment implements PaymentMethod {
-    public function pay($amount) {
-        // Logic for PayPal payment
-    }
-}
-
-// Command pattern for payment process
-class Payment {
-    private $paymentMethod;
-
-    public function __construct(PaymentMethod $paymentMethod) {
-        $this->paymentMethod = $paymentMethod;
-    }
-
-    public function processPayment($amount) {
-        $this->paymentMethod->pay($amount);
-    }
-}
-?>
 <?php
 
-class TicketPurchase {
-    public $pc_id;
-    public $pc_datetime;
-    public $pc_ticketamount;
-    public $pc_status;
+class Database {
+    private static $instance = null;
+    private $connection;
 
-    public function getCustomer() { /* ... */ }
-    public function getDatetime() { /* ... */ }
-    public function getTicketAmount() { /* ... */ }
-    public function getStatus() { /* ... */ }
-    public function setStatus($status) { /* ... */ }
-    public function confirmPurchase() { /* ... */ }
+    private function __construct() {
+        $this->connection = new mysqli('localhost', 'user', 'password', 'database');
+        if ($this->connection->connect_error) {
+            die("Connection failed: " . $this->connection->connect_error);
+        }
+    }
+
+    public static function getInstance() {
+        if (self::$instance == null) {
+            self::$instance = new Database();
+        }
+        return self::$instance;
+    }
+
+    public function getConnection() {
+        return $this->connection;
+    }
 }
 
 class Payment {
@@ -72,88 +28,149 @@ class Payment {
     public $pm_datetime;
     public $pm_totalprice;
 
-    public function makePayment() { /* ... */ }
-    public function confirmPayment() { /* ... */ }
+    public function __construct($id, $datetime, $totalprice) {
+        $this->pm_id = $id;
+        $this->pm_datetime = $datetime;
+        $this->pm_totalprice = $totalprice;
+    }
 }
-?>
 
 class PaymentService {
-    async makePayment(data) {
-        // API call to Payment Service
-    }
-    async confirmPayment(data) {
-        // API call to Payment Service
-    }
-}
-class PaymentService {
-    public function makePayment($totalPrice) {
-        // Implementation using Strategy Pattern for different payment methods
-    }
-    public function confirmPayment($paymentId) {
-        // Implementation
-    }
-}
-class TicketPurchaseService {
-    async createPurchase(data) {
-        // API call to Ticket Purchase Service
-    }
-    async confirmPurchase(data) {
-        // API call to Ticket Purchase Service
-    }
-}
-class TicketPurchaseService {
-    public function createPurchase($customerId, $datetime, $ticketAmount) {
-        // Implementation
-    }
-    public function confirmPurchase($purchaseId) {
-        // Implementation
-    }
-}
-<?php
-// Observer pattern for purchase notifications
-class Observer {
-    public function update($purchase) {
-        // Notify about the purchase
-    }
-}
+    private $connection;
 
-class TicketPurchase {
-    private $ticket;
-    private $customer;
-    private $datetime;
-    private $amount;
-    private $status;
-    private $observers = [];
-
-    public function __construct($ticket, $customer, $datetime, $amount, $status) {
-        $this->ticket = $ticket;
-        $this->customer = $customer;
-        $this->datetime = $datetime;
-        $this->amount = $amount;
-        $this->status = $status;
+    public function __construct() {
+        $this->connection = Database::getInstance()->getConnection();
     }
 
-    public function attachObserver($observer) {
-        $this->observers[] = $observer;
-    }
-
-    public function detachObserver($observer) {
-        // Logic to remove observer
-    }
-
-    public function notify() {
-        foreach ($this->observers as $observer) {
-            $observer->update($this);
+    public function createPayment($datetime, $totalPrice) {
+        $id = uniqid();
+        $stmt = $this->connection->prepare("INSERT INTO payments (pm_id, pm_datetime, pm_totalprice) VALUES (?, ?, ?)");
+        $stmt->bind_param("ssd", $id, $datetime, $totalPrice);
+        if ($stmt->execute()) {
+            return new Payment($id, $datetime, $totalPrice);
+        } else {
+            throw new Exception("Failed to create payment");
         }
     }
 
-    public function save() {
-        // Save purchase logic
-        $this->notify();
+    public function getPayment($id) {
+        $stmt = $this->connection->prepare("SELECT * FROM payments WHERE pm_id = ?");
+        $stmt->bind_param("s", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $payment = $result->fetch_assoc();
+            return new Payment($payment['pm_id'], $payment['pm_datetime'], $payment['pm_totalprice']);
+        } else {
+            throw new Exception("Payment not found");
+        }
+    }
+
+    public function updatePayment($id, $datetime, $totalPrice) {
+        $stmt = $this->connection->prepare("UPDATE payments SET pm_datetime = ?, pm_totalprice = ? WHERE pm_id = ?");
+        $stmt->bind_param("sds", $datetime, $totalPrice, $id);
+        if ($stmt->execute()) {
+            return $this->getPayment($id);
+        } else {
+            throw new Exception("Failed to update payment");
+        }
+    }
+
+    public function deletePayment($id) {
+        $stmt = $this->connection->prepare("DELETE FROM payments WHERE pm_id = ?");
+        $stmt->bind_param("s", $id);
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            throw new Exception("Failed to delete payment");
+        }
+    }
+
+    public function getAllPayments() {
+        $result = $this->connection->query("SELECT * FROM payments");
+        $payments = [];
+        while ($row = $result->fetch_assoc()) {
+            $payments[] = new Payment($row['pm_id'], $row['pm_datetime'], $row['pm_totalprice']);
+        }
+        return $payments;
     }
 }
-?>
 
 class TicketPurchase {
-    // TicketPurchase attributes and methods
+    public $id;
+    public $ticket_id;
+    public $user_id;
+    public $ticket_amount;
+    public $datetime;
+
+    public function __construct($id, $ticket_id, $user_id, $ticket_amount, $datetime) {
+        $this->id = $id;
+        $this->ticket_id = $ticket_id;
+        $this->user_id = $user_id;
+        $this->ticket_amount = $ticket_amount;
+        $this->datetime = $datetime;
+    }
 }
+
+class TicketPurchaseService {
+    private $connection;
+
+    public function __construct() {
+        $this->connection = Database::getInstance()->getConnection();
+    }
+
+    public function createPurchase($ticket_id, $user_id, $ticket_amount, $datetime) {
+        $stmt = $this->connection->prepare("INSERT INTO ticket_purchase (ticket_id, user_id, ticket_amount, datetime) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("iiis", $ticket_id, $user_id, $ticket_amount, $datetime);
+        if ($stmt->execute()) {
+            $id = $stmt->insert_id;
+            return new TicketPurchase($id, $ticket_id, $user_id, $ticket_amount, $datetime);
+        } else {
+            throw new Exception("Failed to create ticket purchase");
+        }
+    }
+
+    public function getPurchase($id) {
+        $stmt = $this->connection->prepare("SELECT * FROM ticket_purchase WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $purchase = $result->fetch_assoc();
+            return new TicketPurchase($purchase['id'], $purchase['ticket_id'], $purchase['user_id'], $purchase['ticket_amount'], $purchase['datetime']);
+        } else {
+            throw new Exception("Ticket purchase not found");
+        }
+    }
+
+    public function updatePurchase($id, $ticket_id, $user_id, $ticket_amount, $datetime) {
+        $stmt = $this->connection->prepare("UPDATE ticket_purchase SET ticket_id = ?, user_id = ?, ticket_amount = ?, datetime = ? WHERE id = ?");
+        $stmt->bind_param("iiisi", $ticket_id, $user_id, $ticket_amount, $datetime, $id);
+        if ($stmt->execute()) {
+            return $this->getPurchase($id);
+        } else {
+            throw new Exception("Failed to update ticket purchase");
+        }
+    }
+
+    public function deletePurchase($id) {
+        $stmt = $this->connection->prepare("DELETE FROM ticket_purchase WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            throw new Exception("Failed to delete ticket purchase");
+        }
+    }
+
+    public function getAllPurchases() {
+        $result = $this->connection->query("SELECT * FROM ticket_purchase");
+        $purchases = [];
+        while ($row = $result->fetch_assoc()) {
+            $purchases[] = new TicketPurchase($row['id'], $row['ticket_id'], $row['user_id'], $row['ticket_amount'], $row['datetime']);
+        }
+        return $purchases;
+    }
+}
+
+?>
