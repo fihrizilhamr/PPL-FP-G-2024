@@ -315,18 +315,20 @@ $loggedin = isset($_SESSION['loggedin']) && $_SESSION['loggedin'];
     <!-- Business Partner Service Content -->
     <div class="tab-pane fade" id="business-partner" role="tabpanel" aria-labelledby="business-partner-tab">
         <h2>Login as Business Partner</h2>
+        <form action="PaymentService/index.php" method="POST" class="mb-4">
+            <button type="submit" class="btn btn-primary">Pay Now</button>
+        </form>
     </div>
 
     <!-- Payment Service Content -->
     <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
-        <!-- <h2>Make Payment</h2>
-        <form action="PaymentService/makePayment.php" method="POST" class="mb-4">
+        <h2>Make Payment</h2>
+        <form action="PaymentService/index.php" method="POST" class="mb-4">
             <div class="form-group">
-                <label for="amount">Amount:</label>
-                <input type="text" id="amount" name="amount" class="form-control" required>
+                
             </div>
             <button type="submit" class="btn btn-primary">Pay Now</button>
-        </form> -->
+        </form>
     </div>
     <div id="output"></div>
 </div>
