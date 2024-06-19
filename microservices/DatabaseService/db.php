@@ -4,11 +4,11 @@ class Database {
     private $connection;
 
     private function __construct() {
-        $hostname = "owd.h.filess.io";
-        $database = "djalanin_mannerhorn";
-        $username = "djalanin_mannerhorn";
-        $password = "b3ec9ca5cd7dc0dd82dfce8af9918f6410dd2ccc";
-        $port = "3307";
+        $hostname = "blvf95dkmybpm8s1nymz-mysql.services.clever-cloud.com";
+        $database = "blvf95dkmybpm8s1nymz";
+        $username = "uzlllwhy5esuidlb";
+        $password = "AyrN643IyXluK9TffnNn";
+        $port = 3306; 
 
         $this->connection = new mysqli($hostname, $username, $password, $database, $port);
         if ($this->connection->connect_error) {
