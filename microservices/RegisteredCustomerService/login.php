@@ -11,7 +11,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($customer->login($username, $password)) {
         $userId = $customer->getUserId($username); 
         $_SESSION['user_id'] = $userId;
+        $_SESSION['loggedin'] = true;
+        $_SESSION['username'] = $username; 
         echo "Login successful!";
+        // header('Location: index.php'); // Redirect to the main page
+        // exit();
     } else {
         echo "Invalid username or password.";
     }

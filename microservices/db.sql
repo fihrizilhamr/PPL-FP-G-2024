@@ -1,6 +1,6 @@
-CREATE DATABASE IF NOT EXISTS travel_booking;
+-- CREATE DATABASE IF NOT EXISTS travel_booking;
 
-USE travel_booking;
+-- USE travel_booking;
 
 CREATE TABLE registered_customer (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -9,7 +9,7 @@ CREATE TABLE registered_customer (
     email VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
     birthdate DATE NOT NULL,
-    gender BOOLEAN NOT NULL,
+    gender CHAR(1) NOT NULL,
     phonenumber VARCHAR(15) NOT NULL
 );
 
@@ -80,3 +80,9 @@ INSERT INTO ticket (name, price, status, description) VALUES
 ('Penginapan di Yogyakarta', 800000.00, 1, 'Penginapan 3 malam di hotel bintang 4 di Yogyakarta'),
 ('Paket Wisata di Lombok', 1200000.00, 1, 'Paket wisata mengelilingi keindahan alam Lombok'),
 ('Wisata Bahari di Raja Ampat', 2500000.00, 1, 'Paket liburan menyusuri keindahan bawah laut Raja Ampat');
+
+INSERT INTO business_partner (bp_username, bp_password, bp_email, bp_name, bp_phonenumber) VALUES
+('partner1', 'password', 'partner1@example.com', 'Partner One', '123-456-7890'),
+('partner2', 'password', 'partner2@example.com', 'Partner Two', '987-654-3210'),
+('partner3', 'password', 'partner3@example.com', 'Partner Three', '456-789-0123');
+

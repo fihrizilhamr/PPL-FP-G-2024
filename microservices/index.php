@@ -1,8 +1,16 @@
+<?php
+session_start();
+$loggedin = isset($_SESSION['loggedin']) && $_SESSION['loggedin'];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv='cache-control' content='no-cache'> 
+    <meta http-equiv='expires' content='0'> 
+    <meta http-equiv='pragma' content='no-cache'>
     <title>Travel Booking System</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
@@ -21,12 +29,19 @@
     <div id="notifications" style="color: red;"></div>
 
     <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <?php if (!$loggedin): ?>
         <li class="nav-item">
             <a class="nav-link active" id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="true">Register</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" id="login-tab" data-toggle="tab" href="#login" role="tab" aria-controls="login" aria-selected="false">Login</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" id="business-partner-tab" data-toggle="tab" href="#business-partner" role="tab" aria-controls="business-partner" aria-selected="false">Business Partner Service</a>
+        </li>
+        <?php endif; ?>
+
+        <?php if ($loggedin): ?>
         <li class="nav-item">
             <a class="nav-link" id="edit-profile-tab" data-toggle="tab" href="#edit-profile" role="tab" aria-controls="edit-profile" aria-selected="false">Edit Profile</a>
         </li>
@@ -39,6 +54,13 @@
         <li class="nav-item">
             <a class="nav-link" id="review-service-tab" data-toggle="tab" href="#review-service" role="tab" aria-controls="review-service" aria-selected="false">Review Service</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" id="destination-tab" data-toggle="tab" href="#destination" role="tab" aria-controls="destination" aria-selected="false">Destination Service</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="payment-tab" data-toggle="tab" href="#payment" role="tab" aria-controls="payment" aria-selected="false">Payment Service</a>
+        </li>
+        <?php endif; ?>
     </ul>
     
 
@@ -278,8 +300,34 @@
                 <button type="submit" class="btn btn-primary">View Review</button>
             </form>
         </div>
+    <!-- Destination Service Content -->
+    <div class="tab-pane fade" id="destination" role="tabpanel" aria-labelledby="destination-tab">
+        <!-- <h2>Search Destination</h2>
+        <form action="DestinationService/searchDestination.php" method="POST" class="mb-4">
+            <div class="form-group">
+                <label for="destination">Destination Name:</label>
+                <input type="text" id="destination" name="destination" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form> -->
     </div>
 
+    <!-- Business Partner Service Content -->
+    <div class="tab-pane fade" id="business-partner" role="tabpanel" aria-labelledby="business-partner-tab">
+        <h2>Login as Business Partner</h2>
+    </div>
+
+    <!-- Payment Service Content -->
+    <div class="tab-pane fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
+        <!-- <h2>Make Payment</h2>
+        <form action="PaymentService/makePayment.php" method="POST" class="mb-4">
+            <div class="form-group">
+                <label for="amount">Amount:</label>
+                <input type="text" id="amount" name="amount" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Pay Now</button>
+        </form> -->
+    </div>
     <div id="output"></div>
 </div>
 
