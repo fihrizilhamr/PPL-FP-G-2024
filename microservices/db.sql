@@ -42,6 +42,38 @@ CREATE TABLE review (
     FOREIGN KEY (user_id) REFERENCES registered_customer(id)
 );
 
+CREATE TABLE destination (
+    d_id INT AUTO_INCREMENT PRIMARY KEY,
+    d_name VARCHAR(255) NOT NULL,
+    d_description TEXT NOT NULL,
+    d_picture VARCHAR(255)
+);
+
+CREATE TABLE payment (
+    pm_id INT AUTO_INCREMENT PRIMARY KEY,
+    pm_datetime DATETIME NOT NULL,
+    pm_totlaprice DECIMAL(10, 2) NOT NULL
+);
+
+CREATE TABLE cart (
+    c_id INT AUTO_INCREMENT PRIMARY KEY,
+    c_datetime DATETIME NOT NULL,
+    c_ticketamount INT NOT NULL,
+    c_userid INT,
+    c_ticketid INT,
+    FOREIGN KEY (c_userid) REFERENCES registered_customer(id),
+    FOREIGN KEY (c_ticketid) REFERENCES ticket(id)
+);
+
+CREATE TABLE business_partner (
+    bp_id INT AUTO_INCREMENT PRIMARY KEY,
+    bp_username VARCHAR(255) NOT NULL,
+    bp_password VARCHAR(255) NOT NULL,
+    bp_email VARCHAR(255) NOT NULL,
+    bp_name VARCHAR(255) NOT NULL,
+    bp_phonenumber VARCHAR(15) NOT NULL
+);
+
 
 INSERT INTO ticket (name, price, status, description) VALUES
 ('Penerbangan ke Bali', 1500000.00, 1, 'Penerbangan langsung ke Bali'),

@@ -1,5 +1,6 @@
 <?php
 // addTicketToCart.php
+session_start();
 include 'classes.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -11,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $registeredCustomer = new CartService();
     $observer = new CartObserver();
     $registeredCustomer->attach($observer);
-    $registeredCustomer->addTicketToCart($ticket_id, $user_id, $amount, $datetime);
+    $registeredCustomer->addTicketToCart($ticket_id, $_SESSION['user_id'], $amount, $datetime);
 
     echo "Ticket added to cart.";
 }

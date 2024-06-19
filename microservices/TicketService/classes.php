@@ -130,17 +130,6 @@ class RegisteredCustomerService extends Subject {
 
         $this->notify(['action' => 'editProfile', 'username' => $username]);
     }
-
-    public function getUserId($username) {
-        $db = Database::getInstance()->getConnection();
-        $stmt = $db->prepare("SELECT id FROM registered_customer WHERE username = ?");
-        $stmt->bind_param("s", $username);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $user = $result->fetch_assoc();
-        $stmt->close();
-        return $user['id'];
-    }
 }
 
 class TicketService extends Subject {

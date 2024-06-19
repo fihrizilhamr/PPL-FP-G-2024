@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Booking System</title>
+</head>
+<body>
+    <h1>Simple Implementation of Travel Booking System</h1>
+
+    <div id="notifications" style="color: red;"></div>
+
+    <br><hr><h1>User Service</h1>
+    <hr><br>
+
+    <h2>Register</h2>
+    <form action="RegisteredCustomerService/register.php" method="POST">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" placeholder="Username" required><br><br>
+    
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" placeholder="Password" required><br><br>
+    
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="Email" required><br><br>
+    
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" placeholder="Name" required><br><br>
+    
+        <label for="birthdate">Birthdate:</label>
+        <input type="date" id="birthdate" name="birthdate" placeholder="Birthdate" required><br><br>
+    
+        <fieldset>
+            <legend>Gender:</legend>
+            <input type="radio" id="male" name="gender" value="M" required>
+            <label for="male">Male</label>
+            <input type="radio" id="female" name="gender" value="F" required>
+            <label for="female">Female</label>
+        </fieldset><br>
+    
+        <label for="phonenumber">Phone Number:</label>
+        <input type="text" id="phonenumber" name="phonenumber" placeholder="Phone Number" required><br><br>
+    
+        <button type="submit">Register</button>
+    </form>
+    
+
+    <h2>Login</h2>
+    <form action="RegisteredCustomerService/login.php" method="POST">
+        <label for="login_username">Username:</label>
+        <input type="text" id="login_username" name="username" placeholder="Username" required><br><br>
+    
+        <label for="login_password">Password:</label>
+        <input type="password" id="login_password" name="password" placeholder="Password" required><br><br>
+    
+        <button type="submit">Login</button>
+    </form>
+    
+
+    <h2>Edit Profile</h2>
+    <form action="RegisteredCustomerService/editProfile.php" method="post">
+        <label for="edit_username">Username:</label>
+        <input type="text" id="edit_username" name="username" placeholder="Username" required><br><br>
+    
+        <label for="edit_password">Password:</label>
+        <input type="password" id="edit_password" name="password" placeholder="Password" required><br><br>
+    
+        <label for="edit_email">Email:</label>
+        <input type="email" id="edit_email" name="email" placeholder="Email" required><br><br>
+    
+        <label for="edit_name">Name:</label>
+        <input type="text" id="edit_name" name="name" placeholder="Name" required><br><br>
+    
+        <label for="edit_birthdate">Birthdate:</label>
+        <input type="date" id="edit_birthdate" name="birthdate" placeholder="Birthdate" required><br><br>
+    
+        <fieldset>
+            <legend>Gender:</legend>
+            <input type="radio" id="edit_male" name="gender" value="M" required>
+            <label for="edit_male">Male</label>
+            <input type="radio" id="edit_female" name="gender" value="F" required>
+            <label for="edit_female">Female</label>
+        </fieldset><br>
+    
+        <label for="edit_phonenumber">Phone Number:</label>
+        <input type="text" id="edit_phonenumber" name="phonenumber" placeholder="Phone Number" required><br><br>
+    
+        <button type="submit">Update Profile</button>
+    </form>
+    
+
+    <br><hr><h1>Ticket Service</h1>
+    <hr><br>
+
+    <h2>Search Ticket</h2>
+    <form action="TicketService/searchTicket.php" method="POST">
+        <label for="name">Ticket Name:</label>
+        <input type="text" id="name" name="name" required>
+        <button type="submit">Search</button>
+    </form>
+
+    <br><hr><h1>Cart Service</h1>
+    <hr><br>
+
+    <h2>Add Ticket to Cart</h2>
+    <form action="CartService/addTicketToCart.php" method="POST">
+        <label for="ticket_id">Ticket ID:</label>
+        <input type="text" id="ticket_id" name="ticket_id" required>
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" required>
+        <label for="datetime">Datetime:</label>
+        <input type="datetime-local" id="datetime" name="datetime" required>
+        <button type="submit">Add to Cart</button>
+    </form>
+
+    <h2>Edit Ticket in Cart</h2>
+    <form action="CartService/editTicketInCart.php" method="post">
+        <label for="purchase_id">Cart ID:</label>
+        <input type="number" id="purchase_id" name="purchase_id" placeholder="Purchase ID" required><br><br>
+    
+        <label for="ticket_id">Ticket ID:</label>
+        <input type="number" id="ticket_id" name="ticket_id" placeholder="Ticket ID" required><br><br>
+    
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" placeholder="Amount" required><br><br>
+    
+        <label for="datetime">Datetime:</label>
+        <input type="datetime-local" id="datetime" name="datetime" placeholder="Datetime" required><br><br>
+    
+        <button type="submit">Edit Ticket</button>
+    </form>
+    
+
+    <h2>Delete Ticket from Cart</h2>
+    <form action="CartService/deleteTicketFromCart.php" method="POST">
+        <label for="purchase_id">Cart ID:</label>
+        <input type="number" id="purchase_id" name="purchase_id" required>
+        <button type="submit">Delete from Cart</button>
+    </form>
+
+    <br><hr><h1>Review Service</h1>
+    <hr><br>
+
+    <h2>Make a Review</h2>
+    <form action="ReviewService/makeReview.php" method="POST" enctype="multipart/form-data">
+        <label for="dest_id">Destination ID:</label>
+        <input type="text" id="dest_id" name="dest_id" placeholder="Destination ID" required><br>
+        
+        <!-- <label for="user_id">User ID:</label>
+        <input type="text" id="user_id" name="user_id" placeholder="User ID" required><br> -->
+        
+        <label for="rating">Rating:</label>
+        <input type="number" id="rating" name="rating" placeholder="Rating" required><br>
+        
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" placeholder="Description" required></textarea><br>
+        
+        <label for="image">Image:</label>
+        <input type="file" id="image" name="image" required><br>
+        
+        <label for="datetime">Date and Time:</label>
+        <input type="datetime-local" id="datetime" name="datetime" required><br>
+        
+        <button type="submit">Submit Review</button>
+    </form>
+
+    
+    <h2>Edit Review</h2>
+    <form action="ReviewService/editReview.php" method="post" enctype="multipart/form-data">
+        <label for="review_id">Review ID:</label>
+        <input type="number" id="review_id" name="review_id" required><br>
+    
+        <label for="rating">Rating:</label>
+        <input type="number" id="rating" name="rating" required><br>
+    
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description" required><br>
+    
+        <label for="image">Image:</label>
+        <input type="file" id="image" name="image" required><br>
+    
+        <label for="datetime">Datetime:</label>
+        <input type="datetime-local" id="datetime" name="datetime" required><br>
+    
+        <button type="submit">Edit Review</button>
+    </form>
+    
+
+    <h2>Remove Review</h2>
+    <form action="ReviewService/removeReview.php" method="POST">
+        <label for="review_id">Review ID:</label>
+        <input type="number" id="review_id" name="review_id" required>
+        <button type="submit">Remove Review</button>
+    </form>
+
+    <h2>View Review</h2>
+    <form action="ReviewService/viewReview.php" method="get">
+        <label for="review_id">Review ID:</label>
+        <input type="number" name="review_id" placeholder="Review ID" required>
+        <button type="submit">View Review</button>
+    </form>
+
+
+
+    <script>
+        function displayNotification(message) {
+            const notificationsDiv = document.getElementById('notifications');
+            const newNotification = document.createElement('p');
+            newNotification.textContent = message;
+            notificationsDiv.appendChild(newNotification);
+        }
+
+    </script>
+</body>
+</html>

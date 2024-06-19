@@ -1,4 +1,6 @@
+
 <?php
+session_start();
 include 'classes.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -7,6 +9,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $customer = new RegisteredCustomerService($username, $password, '', '', '', true, '');
     if ($customer->login($username, $password)) {
+        $userId = $customer->getUserId($username); 
+        $_SESSION['user_id'] = $userId;
         echo "Login successful!";
     } else {
         echo "Invalid username or password.";

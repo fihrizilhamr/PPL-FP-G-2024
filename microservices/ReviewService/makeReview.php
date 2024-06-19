@@ -1,4 +1,5 @@
 <?php
+session_start();
 require 'classes.php'; 
 
 $target_dir = "uploads/";
@@ -25,7 +26,7 @@ if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
     // $customer = new RegisteredCustomer('', '', '', '', '', '', '');
     $customer = new ReviewService();
     $customer->attach($observer);
-    $customer->makeReview($_POST['dest_id'], $_POST['user_id'], $_POST['rating'], $_POST['description'], $target_file, $_POST['datetime']);
+    $customer->makeReview($_POST['dest_id'],  $_SESSION['user_id'], $_POST['rating'], $_POST['description'], $target_file, $_POST['datetime']);
     echo "The file " . basename($_FILES["image"]["name"]) . " has been uploaded as " . $unique_id . '.' . $imageFileType;
 } else {
     echo "Sorry, there was an error uploading your file.";
