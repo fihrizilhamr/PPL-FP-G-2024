@@ -2,12 +2,11 @@
 include 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id = $_POST['id'];
-    $payer_name = $_POST['payer_name'];
-    $amount = $_POST['amount'];
-    $payment_date = $_POST['payment_date'];
+    $pm_id = $_POST['pm_id'];
+    $pm_totalprice = $_POST['pm_totlaprice'];
+    $pm_datetime = $_POST['pm_datetime'];
 
-    $sql = "UPDATE payments SET payer_name='$payer_name', amount='$amount', payment_date='$payment_date' WHERE id='$id'";
+    $sql = "UPDATE payment SET pm_totlaprice='$pm_totalprice', pm_datetime='$pm_datetime' WHERE pm_id='$pm_id'";
 
     if ($conn->query($sql) === TRUE) {
         echo "Record updated successfully";
@@ -17,17 +16,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $conn->close();
 } else {
-    $id = $_GET['id'];
-    $sql = "SELECT * FROM payments WHERE id=$id";
+    $pm_id = $_GET['pm_id'];
+    $sql = "SELECT * FROM payment WHERE pm_id=$pm_id";
     $result = $conn->query($sql);
     $row = $result->fetch_assoc();
     ?>
 
     <form method="post" action="update_payment.php">
-        <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-        Name: <input type="text" name="payer_name" value="<?php echo $row['payer_name']; ?>"><br>
-        Amount: <input type="text" name="amount" value="<?php echo $row['amount']; ?>"><br>
-        Payment Date: <input type="date" name="payment_date" value="<?php echo $row['payment_date']; ?>"><br>
+        <input type="hidden" name="id" value="<?php echo $row['pm_id']; ?>">
+        Amount: <input type="text" name="amount" value="<?php echo $row['pm_totlaprice']; ?>"><br>
+        Payment Date: <input type="date" name="payment_date" value="<?php echo $row['pm_datetime']; ?>"><br>
         <input type="submit" value="Submit">
     </form>
 

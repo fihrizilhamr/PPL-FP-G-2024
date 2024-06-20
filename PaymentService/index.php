@@ -11,18 +11,14 @@
     <div class="container">
       <h1 class="my-4">Create Payment</h1>
       <form method="post" action="create_payment.php">
-          <div class="form-group">
-            <label for="payer_name">Name:</label>
-            <input type="text" class="form-control" name="payer_name" id="payer_name" required>
-          </div>
-          <div class="form-group">
-            <label for="amount">Amount:</label>
-            <input type="number" step="0.01" class="form-control" name="amount" id="amount" required>
-          </div>
-          <div class="form-group">
-            <label for="payment_date">Payment Date:</label>
-            <input type="date" class="form-control" name="payment_date" id="payment_date" required>
-          </div>
+        <div class="form-group">
+          <label for="payment_date">Payment Date:</label>
+          <input type="date" class="form-control" name="payment_date" id="payment_date" required>
+        </div>
+        <div class="form-group">
+          <label for="amount">Amount:</label>
+          <input type="number" step="0.01" class="form-control" name="amount" id="amount" required>
+        </div>
           <button type="submit" class="btn btn-primary">Submit</button>
       </form>
 

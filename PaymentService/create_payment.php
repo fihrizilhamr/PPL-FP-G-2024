@@ -2,11 +2,10 @@
 include 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $payer_name = $_POST['payer_name'];
-    $amount = $_POST['amount'];
-    $payment_date = $_POST['payment_date'];
+    $pm_datetime = $_POST['pm_datetime'];
+    $pm_totalprice = $_POST['pm_totlaprice'];
 
-    $sql = "INSERT INTO payments (payer_name, amount, payment_date) VALUES ('$payer_name', '$amount', '$payment_date')";
+    $sql = "INSERT INTO payment (pm_datetime, pm_totlaprice) VALUES ('$m_datetime', '$pm_totalprice')";
 
     if ($conn->query($sql) === TRUE) {
         echo "New record created successfully";

@@ -1,9 +1,9 @@
 <?php
 include 'db.php';
 
-$id = $_GET['id'];
+$pm_id = $_GET['pm_id'];
 
-$sql = "DELETE FROM payments WHERE id=$id";
+$sql = "DELETE FROM payment WHERE pm_id=$pm_id";
 
 if ($conn->query($sql) === TRUE) {
     echo "Record deleted successfully";
