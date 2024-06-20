@@ -10,8 +10,8 @@ if ($result->num_rows > 0) {
         "ID: ". $row["pm_id"]. 
         " - Payment Date: ". $row["pm_datetime"]. 
         " - Amount: ". $row["pm_totlaprice"]. 
-        " - <a href='delete_payment.php?id=". $row["pm_id"]. "'>Delete</a> 
-        | <a href='update_payment.php?id=". $row["pm_id"]. "'>Update</a><br>";
+        " - <a href='delete_payment.php?pm_id=". $row["pm_id"]. "'>Delete</a> 
+        | <a href='update_payment.php?pm_id=". $row["pm_id"]. "'>Update</a><br>";
     }
 } else {
     echo "0 results";
