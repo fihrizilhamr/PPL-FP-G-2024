@@ -14,7 +14,7 @@ $requestMethod = $_SERVER['REQUEST_METHOD'];
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, ngrok-skip-browser-warning');
 
 // Parse URL to get path and query parameters
 $parsedUrl = parse_url($requestUri);

@@ -443,15 +443,15 @@ $partnerloggedin = isset($_SESSION['loggedin']) && $_SESSION['loggedin'];
 
     document.getElementById('fetchButton').addEventListener('click', function() {
     fetch('http://localhost:8000/destinations')
-        .then(response => response.json())
-        .then(data => {
-            const outputDiv = document.getElementById('output-destination');
-            outputDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-            document.getElementById('output-destination').textContent = 'Error fetching data';
-        });
+  .then(response => response.json())
+  .then(data => {
+    const outputDiv = document.getElementById('output-destination');
+    outputDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+  })
+  .catch(error => {
+    console.error('Error fetching data:', error);
+    document.getElementById('output-destination').textContent = 'Error fetching data';
+  });
 });
 
 document.getElementById('fetchForm').addEventListener('submit', function(event) {
@@ -479,7 +479,8 @@ document.getElementById('updateForm').addEventListener('submit', function(event)
     fetch(`http://localhost:8000/destination?id=${id}`, {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+           
         },
         body: JSON.stringify({
             name: name,
