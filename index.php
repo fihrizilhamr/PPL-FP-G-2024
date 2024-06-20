@@ -39,6 +39,10 @@ $loggedin = isset($_SESSION['loggedin']) && $_SESSION['loggedin'];
         <li class="nav-item">
             <a class="nav-link" id="business-partner-tab" data-toggle="tab" href="#business-partner" role="tab" aria-controls="business-partner" aria-selected="false">Business Partner Service</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" id="destination-tab" data-toggle="tab" href="#destination" role="tab" aria-controls="search" aria-selected="true">Destination Se</a>
+        </li>
+       
         <?php endif; ?>
 
         <?php if ($loggedin): ?>
@@ -302,14 +306,76 @@ $loggedin = isset($_SESSION['loggedin']) && $_SESSION['loggedin'];
         </div>
     <!-- Destination Service Content -->
     <div class="tab-pane fade" id="destination" role="tabpanel" aria-labelledby="destination-tab">
-        <!-- <h2>Search Destination</h2>
-        <form action="DestinationService/searchDestination.php" method="POST" class="mb-4">
-            <div class="form-group">
-                <label for="destination">Destination Name:</label>
-                <input type="text" id="destination" name="destination" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form> -->
+    <h1 class="my-4">Destinations</h1>
+    <button id="fetchButton" class="btn btn-primary mb-4">Fetch Destinations</button>
+    <form id="searchForm" class="mt-4">
+        <div class="form-group">
+            <label for="searchName">Enter Destination Name:</label>
+            <input type="text" class="form-control" id="searchName" name="searchName" required>
+        </div>
+        <button type="submit" class="btn btn-info">Search</button>
+    </form>
+
+    <form id="fetchForm" class="mt-4">
+        <div class="form-group">
+            <label for="destinationId">Enter Destination ID:</label>
+            <input type="text" class="form-control" id="destinationId" name="destinationId" required>
+        </div>
+        <button type="submit" class="btn btn-info">Fetch Destination by ID</button>
+    </form>
+
+    <form id="createForm" class="mt-4">
+        <h2>Create New Destination</h2>
+        <div class="form-group">
+                    <label for="createOwnerId">OwnerId:</label>
+                    <input type="text" class="form-control" id="createOwnerId" name="createOwnerId" required>
+                </div>
+        <div class="form-group">
+            <label for="createName">Name:</label>
+            <input type="text" class="form-control" id="createName" name="createName" required>
+        </div>
+        <div class="form-group">
+            <label for="createDescription">Description:</label>
+            <input type="text" class="form-control" id="createDescription" name="createDescription" required>
+        </div>
+        <div class="form-group">
+            <label for="createPicture">Picture URL:</label>
+            <input type="text" class="form-control" id="createPicture" name="createPicture" required>
+        </div>
+        <button type="submit" class="btn btn-success">Create Destination</button>
+    </form>
+
+    <form id="updateForm" class="mt-4">
+        <h2>Update Destination</h2>
+        <div class="form-group">
+            <label for="updateId">Destination ID:</label>
+            <input type="text" class="form-control" id="updateId" name="updateId" required>
+        </div>
+        <div class="form-group">
+            <label for="updateName">Name:</label>
+            <input type="text" class="form-control" id="updateName" name="updateName" required>
+        </div>
+        <div class="form-group">
+            <label for="updateDescription">Description:</label>
+            <input type="text" class="form-control" id="updateDescription" name="updateDescription" required>
+        </div>
+        <div class="form-group">
+            <label for="updatePicture">Picture URL:</label>
+            <input type="text" class="form-control" id="updatePicture" name="updatePicture" required>
+        </div>
+        <button type="submit" class="btn btn-warning">Update Destination</button>
+    </form>
+
+    <form id="deleteForm" class="mt-4">
+        <h2>Delete Destination</h2>
+        <div class="form-group">
+            <label for="deleteId">Destination ID:</label>
+            <input type="text" class="form-control" id="deleteId" name="deleteId" required>
+        </div>
+        <button type="submit" class="btn btn-danger">Delete Destination</button>
+    </form>
+
+    <div id="output-destination"></div>
     </div>
 
     <!-- Business Partner Service Content -->
@@ -347,6 +413,131 @@ $loggedin = isset($_SESSION['loggedin']) && $_SESSION['loggedin'];
         newNotification.textContent = message;
         notificationsDiv.appendChild(newNotification);
     }
+
+
+    document.getElementById('fetchButton').addEventListener('click', function() {
+    fetch('http://localhost:8000/destinations')
+        .then(response => response.json())
+        .then(data => {
+            const outputDiv = document.getElementById('output-destination');
+            outputDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            document.getElementById('output-destination').textContent = 'Error fetching data';
+        });
+});
+
+document.getElementById('fetchForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const id = document.getElementById('destinationId').value;
+    fetch(`http://localhost:8000/destination?id=${id}`)
+        .then(response => response.json())
+        .then(data => {
+            const outputDiv = document.getElementById('output-destination');
+            outputDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            document.getElementById('output-destination').textContent = 'Error fetching data';
+        });
+});
+
+document.getElementById('updateForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const id = document.getElementById('updateId').value;
+    const name = document.getElementById('updateName').value;
+    const description = document.getElementById('updateDescription').value;
+    const picture = document.getElementById('updatePicture').value;
+
+    fetch(`http://localhost:8000/destination?id=${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: name,
+            description: description,
+            picture: picture
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const outputDiv = document.getElementById('output-destination');
+        outputDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+    })
+    .catch(error => {
+        console.error('Error updating data:', error);
+        document.getElementById('output-destination').textContent = 'Error updating data';
+    });
+});
+
+document.getElementById('deleteForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const id = document.getElementById('deleteId').value;
+
+    fetch(`http://localhost:8000/destination?id=${id}`, {
+        method: 'DELETE'
+    })
+    .then(response => response.json())
+    .then(data => {
+        const outputDiv = document.getElementById('output-destination');
+        outputDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+    })
+    .catch(error => {
+        console.error('Error deleting data:', error);
+        document.getElementById('output-destination').textContent = 'Error deleting data';
+    });
+});
+
+document.getElementById('createForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const name = document.getElementById('createName').value;
+    const description = document.getElementById('createDescription').value;
+    const picture = document.getElementById('createPicture').value;
+    const ownerId = document.getElementById('createOwnerId').value;
+
+    fetch(`http://localhost:8000/destinations`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            ownerId: ownerId,
+            name: name,
+            description: description,
+            picture: picture
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const outputDiv = document.getElementById('output-destination');
+        outputDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+    })
+    .catch(error => {
+        console.error('Error creating data:', error);
+        document.getElementById('output-destination').textContent = 'Error creating data';
+    });
+});
+
+document.getElementById('searchForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const name = document.getElementById('searchName').value.trim();
+    fetch(`http://localhost:8000/destination/search?name=${name}`)
+        .then(response => response.json())
+        .then(data => {
+            const outputDiv = document.getElementById('output-destination');
+            if (data.length > 0) {
+                outputDiv.innerHTML = '<h2>Search Results:</h2><pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } else {
+                outputDiv.innerHTML = '<p>No destinations found with that name.</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error searching data:', error);
+            document.getElementById('output-destination').textContent = 'Error searching data';
+        });
+});
 </script>
 
 </body>
