@@ -40,12 +40,15 @@ $loggedin = isset($_SESSION['loggedin']) && $_SESSION['loggedin'];
             <a class="nav-link" id="business-partner-tab" data-toggle="tab" href="#business-partner" role="tab" aria-controls="business-partner" aria-selected="false">Business Partner Service</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="destination-tab" data-toggle="tab" href="#destination" role="tab" aria-controls="search" aria-selected="true">Destination Se</a>
+            <a class="nav-link" id="destination-tab" data-toggle="tab" href="#destination" role="tab" aria-controls="search" aria-selected="true">Destination Service</a>
         </li>
        
         <?php endif; ?>
 
         <?php if ($loggedin): ?>
+        <li class="nav-item">
+            <a class="nav-link" href="RegisteredCustomerService/logout.php">Logout</a>
+        </li>
         <li class="nav-item">
             <a class="nav-link" id="edit-profile-tab" data-toggle="tab" href="#edit-profile" role="tab" aria-controls="edit-profile" aria-selected="false">Edit Profile</a>
         </li>
@@ -172,6 +175,12 @@ $loggedin = isset($_SESSION['loggedin']) && $_SESSION['loggedin'];
     
         </div>
 
+
+        <!-- <div class="tab-pane fade" id="login" role="tabpanel" aria-labelledby="login-tab">
+            <h2>Logout</h2>
+            
+        </div> -->
+
         <!-- Ticket Service -->
         <div class="tab-pane fade" id="ticket-service" role="tabpanel" aria-labelledby="ticket-service-tab">
             <h2>Search Ticket</h2>
@@ -232,6 +241,9 @@ $loggedin = isset($_SESSION['loggedin']) && $_SESSION['loggedin'];
             </div>
             <button type="submit" class="btn btn-danger">Delete Ticket</button>
         </form>
+
+        <h2>View My Cart</h2>
+        <a href="CartService/view_cart.php"><button type="submit" class="btn btn-primary">View My Cart</button></a>
         </div>
 
         <!-- Review Service -->

@@ -1,6 +1,5 @@
 <?php
 require '../DatabaseService/db.php';
-
 // Factory Method for creating registered customers
 class RegisteredCustomerFactory {
     public static function createRegisteredCustomer($username, $password, $email, $name, $birthdate, $gender, $phonenumber) {
@@ -108,6 +107,17 @@ class RegisteredCustomerService extends Subject {
 
         $this->notify(['action' => 'editProfile', 'username' => $username]);
     }
+
+    public function getUserId($username) {
+        $db = Database::getInstance()->getConnection();
+        $stmt = $db->prepare("SELECT id FROM registered_customer WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+        $stmt->close();
+        return $user['id'];
+    }
 }
 
 class TicketService extends Subject {
@@ -127,7 +137,7 @@ class TicketService extends Subject {
 class CartService extends Subject {
     public function addTicketToCart($ticket_id, $user_id, $amount, $datetime) {
         $db = Database::getInstance()->getConnection();
-        $stmt = $db->prepare("INSERT INTO cart (c_ticketid, c_userid, c_ticketamount, c_datetime) VALUES (?, ?, ?, ?)");
+        $stmt = $db->prepare("INSERT INTO ticket_purchase (ticket_id, user_id, ticket_amount, datetime) VALUES (?, ?, ?, ?)");
         $stmt->bind_param("siis", $ticket_id, $user_id, $amount, $datetime);
         $stmt->execute();
         $stmt->close();
@@ -137,7 +147,7 @@ class CartService extends Subject {
 
     public function deleteTicketFromCart($purchase_id) {
         $db = Database::getInstance()->getConnection();
-        $stmt = $db->prepare("DELETE FROM cart WHERE c_id = ?");
+        $stmt = $db->prepare("DELETE FROM ticket_purchase WHERE id = ?");
         $stmt->bind_param("i", $purchase_id);
         $stmt->execute();
         $stmt->close();
@@ -147,24 +157,12 @@ class CartService extends Subject {
 
     public function editTicketInCart($purchase_id, $ticket_id, $amount, $datetime) {
         $db = Database::getInstance()->getConnection();
-        $stmt = $db->prepare("UPDATE cart SET c_ticketid = ?, c_ticketamount = ?, c_datetime = ? WHERE c_id = ?");
+        $stmt = $db->prepare("UPDATE ticket_purchase SET ticket_id = ?, ticket_amount = ?, datetime = ? WHERE id = ?");
         $stmt->bind_param("iisi", $ticket_id, $amount, $datetime, $purchase_id);
         $stmt->execute();
         $stmt->close();
 
         $this->notify(['action' => 'editTicketInCart', 'purchase_id' => $purchase_id, 'ticket_id' => $ticket_id]);
-    }
-
-    public function viewMyCart($user_id) {
-        $db = Database::getInstance()->getConnection();
-        $stmt = $db->prepare("SELECT c_id, c_ticketid, c_ticketamount, c_datetime FROM cart WHERE c_userid = ?");
-        $stmt->bind_param("i", $user_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $cartItems = $result->fetch_all(MYSQLI_ASSOC);
-        $stmt->close();
-        
-        return $cartItems;
     }
 }
 
