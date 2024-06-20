@@ -1,6 +1,7 @@
 <?php
 session_start();
 $loggedin = isset($_SESSION['loggedin']) && $_SESSION['loggedin'];
+$partnerloggedin = isset($_SESSION['loggedin']) && $_SESSION['loggedin'];
 ?>
 
 <!DOCTYPE html>
@@ -393,6 +394,19 @@ $loggedin = isset($_SESSION['loggedin']) && $_SESSION['loggedin'];
     <!-- Business Partner Service Content -->
     <div class="tab-pane fade" id="business-partner" role="tabpanel" aria-labelledby="business-partner-tab">
         <h2>Login as Business Partner</h2>
+        <!-- <h2>Login</h2> -->
+        <form action="BusinessPartnerService/login.php" method="POST" class="mb-4">
+            <div class="form-group">
+                <label for="login_username">Username:</label>
+                <input type="text" id="login_username" name="username" class="form-control" placeholder="Username" required>
+            </div>
+            <div class="form-group">
+                <label for="login_password">Password:</label>
+                <input type="password" id="login_password" name="password" class="form-control" placeholder="Password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+        <h2>Pay Now</h2>
         <form action="PaymentService/index.php" method="POST" class="mb-4">
             <button type="submit" class="btn btn-primary">Pay Now</button>
         </form>

@@ -1,9 +1,9 @@
 <?php
 require '../DatabaseService/db.php';
-// Factory Method for creating registered customers
-class RegisteredCustomerFactory {
-    public static function createRegisteredCustomer($username, $password, $email, $name, $birthdate, $gender, $phonenumber) {
-        return new RegisteredCustomerService($username, $password, $email, $name, $birthdate, $gender, $phonenumber);
+
+class BusinessPartnerFactory {
+    public static function createBusinessPartner($username, $password, $email, $name, $phonenumber) {
+        return new BusinessPartnerService($username, $password, $email, $name, $phonenumber);
     }
 }
 
@@ -33,55 +33,33 @@ abstract class Subject {
     }
 }
 
-// Concrete Observer
-class CustomerObserver implements Observer {
+// Concrete Observer for Business Partner
+class BusinessPartnerObserver implements Observer {
     public function update($data) {
-        echo "Customer data has been updated: " . json_encode($data) . "\n";
+        echo "Business Partner data has been updated: " . json_encode($data) . "\n";
     }
 }
 
-class TicketObserver implements Observer {
-    public function update($data) {
-        echo "Ticket data has been updated: " . json_encode($data) . "\n";
-    }
-}
-
-class CartObserver implements Observer {
-    public function update($data) {
-        echo "Cart data has been updated: " . json_encode($data) . "\n";
-    }
-}
-
-class ReviewObserver implements Observer {
-    public function update($data) {
-        echo "Review data has been updated: " . json_encode($data) . "\n";
-    }
-}
-
-// RegisteredCustomer class
-class RegisteredCustomerService extends Subject {
+// BusinessPartnerService class
+class BusinessPartnerService extends Subject {
     private $username;
     private $password;
     private $email;
     private $name;
-    private $birthdate;
-    private $gender;
     private $phonenumber;
 
-    public function __construct($username, $password, $email, $name, $birthdate, $gender, $phonenumber) {
+    public function __construct($username, $password, $email, $name, $phonenumber) {
         $this->username = $username;
         $this->password = $password;
         $this->email = $email;
         $this->name = $name;
-        $this->birthdate = $birthdate;
-        $this->gender = $gender;
         $this->phonenumber = $phonenumber;
     }
 
     public function save() {
         $db = Database::getInstance()->getConnection();
-        $stmt = $db->prepare("INSERT INTO registered_customer (username, password, email, name, birthdate, gender, phonenumber) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssssss", $this->username, $this->password, $this->email, $this->name, $this->birthdate, $this->gender, $this->phonenumber);
+        $stmt = $db->prepare("INSERT INTO business_partner (bp_username, bp_password, bp_email, bp_name, bp_phonenumber) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssss", $this->username, $this->password, $this->email, $this->name, $this->phonenumber);
         $stmt->execute();
         $stmt->close();
 
@@ -90,7 +68,7 @@ class RegisteredCustomerService extends Subject {
 
     public function login($username, $password) {
         $db = Database::getInstance()->getConnection();
-        $stmt = $db->prepare("SELECT * FROM registered_customer WHERE username = ? AND password = ?");
+        $stmt = $db->prepare("SELECT * FROM business_partner WHERE bp_username = ? AND bp_password = ?");
         $stmt->bind_param("ss", $username, $password);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -98,10 +76,10 @@ class RegisteredCustomerService extends Subject {
         return $result->num_rows > 0;
     }
 
-    public function editProfile($username, $password, $email, $name, $birthdate, $gender, $phonenumber) {
+    public function editProfile($username, $password, $email, $name, $phonenumber) {
         $db = Database::getInstance()->getConnection();
-        $stmt = $db->prepare("UPDATE registered_customer SET password = ?, email = ?, name = ?, birthdate = ?, gender = ?, phonenumber = ? WHERE username = ? AND password = ?");
-        $stmt->bind_param("ssssssss", $password, $email, $name, $birthdate, $gender, $phonenumber, $username, $password);
+        $stmt = $db->prepare("UPDATE business_partner SET bp_password = ?, bp_email = ?, bp_name = ?, bp_phonenumber = ? WHERE bp_username = ? AND bp_password = ?");
+        $stmt->bind_param("ssssss", $password, $email, $name, $phonenumber, $username, $password);
         $stmt->execute();
         $stmt->close();
 
@@ -110,104 +88,14 @@ class RegisteredCustomerService extends Subject {
 
     public function getUserId($username) {
         $db = Database::getInstance()->getConnection();
-        $stmt = $db->prepare("SELECT id FROM registered_customer WHERE username = ?");
+        $stmt = $db->prepare("SELECT bp_id FROM business_partner WHERE bp_username = ?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
         $stmt->close();
-        return $user['id'];
+        return $user['bp_id'];
     }
 }
 
-class TicketService extends Subject {
-    public function searchTicket($substring) {
-        $db = Database::getInstance()->getConnection();
-        $stmt = $db->prepare("SELECT * FROM ticket WHERE name LIKE ? OR description LIKE ?");
-        $searchTerm = '%' . $substring . '%';
-        $stmt->bind_param("ss", $searchTerm, $searchTerm);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $tickets = $result->fetch_all(MYSQLI_ASSOC);
-        $stmt->close();
-        return $tickets;
-    }
-}
 
-class CartService extends Subject {
-    public function addTicketToCart($ticket_id, $user_id, $amount, $datetime) {
-        $db = Database::getInstance()->getConnection();
-        $stmt = $db->prepare("INSERT INTO ticket_purchase (ticket_id, user_id, ticket_amount, datetime) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("siis", $ticket_id, $user_id, $amount, $datetime);
-        $stmt->execute();
-        $stmt->close();
-
-        $this->notify(['action' => 'addTicketToCart', 'ticket_id' => $ticket_id, 'user_id' => $user_id]);
-    }
-
-    public function deleteTicketFromCart($purchase_id) {
-        $db = Database::getInstance()->getConnection();
-        $stmt = $db->prepare("DELETE FROM ticket_purchase WHERE id = ?");
-        $stmt->bind_param("i", $purchase_id);
-        $stmt->execute();
-        $stmt->close();
-
-        $this->notify(['action' => 'deleteTicketFromCart', 'purchase_id' => $purchase_id]);
-    }
-
-    public function editTicketInCart($purchase_id, $ticket_id, $amount, $datetime) {
-        $db = Database::getInstance()->getConnection();
-        $stmt = $db->prepare("UPDATE ticket_purchase SET ticket_id = ?, ticket_amount = ?, datetime = ? WHERE id = ?");
-        $stmt->bind_param("iisi", $ticket_id, $amount, $datetime, $purchase_id);
-        $stmt->execute();
-        $stmt->close();
-
-        $this->notify(['action' => 'editTicketInCart', 'purchase_id' => $purchase_id, 'ticket_id' => $ticket_id]);
-    }
-}
-
-class ReviewService extends Subject {
-    public function makeReview($dest_id, $user_id, $rating, $description, $image_path, $datetime) {
-        $db = Database::getInstance()->getConnection();
-        $stmt = $db->prepare("INSERT INTO review (destination_id, user_id, rating, description, image_path, datetime) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("siisss", $dest_id, $user_id, $rating, $description, $image_path, $datetime);
-        $stmt->execute();
-        $stmt->close();
-
-        $this->notify(['action' => 'makeReview', 'dest_id' => $dest_id, 'user_id' => $user_id]);
-    }
-
-    public function removeReview($review_id) {
-        $db = Database::getInstance()->getConnection();
-        $stmt = $db->prepare("DELETE FROM review WHERE id = ?");
-        $stmt->bind_param("i", $review_id);
-        $stmt->execute();
-        $stmt->close();
-
-        $this->notify(['action' => 'removeReview', 'review_id' => $review_id]);
-    }
-
-    public function viewReview($review_id) {
-        $db = Database::getInstance()->getConnection();
-        $stmt = $db->prepare("SELECT * FROM review WHERE id = ?");
-        $stmt->bind_param("i", $review_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $review = $result->fetch_assoc();
-        $stmt->close();
-        
-        $this->notify(['action' => 'viewReview', 'review' => $review]);
-        return $review;
-    }
-
-    public function editReview($review_id, $rating, $description, $image_path, $datetime) {
-        $db = Database::getInstance()->getConnection();
-        $stmt = $db->prepare("UPDATE review SET rating = ?, description = ?, image_path = ?, datetime = ? WHERE id = ?");
-        $stmt->bind_param("isssi", $rating, $description, $image_path, $datetime, $review_id);
-        $stmt->execute();
-        $stmt->close();
-
-        $this->notify(['action' => 'editReview', 'review_id' => $review_id]);
-    }
-}
-?>
