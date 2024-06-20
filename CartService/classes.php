@@ -154,6 +154,18 @@ class CartService extends Subject {
 
         $this->notify(['action' => 'editTicketInCart', 'purchase_id' => $purchase_id, 'ticket_id' => $ticket_id]);
     }
+
+    public function viewMyCart($user_id) {
+        $db = Database::getInstance()->getConnection();
+        $stmt = $db->prepare("SELECT c_id, c_ticketid, c_ticketamount, c_datetime FROM cart WHERE c_userid = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $cartItems = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+        
+        return $cartItems;
+    }
 }
 
 class ReviewService extends Subject {

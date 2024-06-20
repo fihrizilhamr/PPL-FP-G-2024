@@ -1,6 +1,6 @@
 -- CREATE DATABASE IF NOT EXISTS travel_booking;
 
--- USE travel_booking;
+-- USE travel_booking;1Djalaninwebapp*
 
 CREATE TABLE registered_customer (
     id INT AUTO_INCREMENT PRIMARY KEY,

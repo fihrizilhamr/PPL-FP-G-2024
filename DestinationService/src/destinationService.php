@@ -20,12 +20,12 @@ class DestinationService
     }
 
     // Create a new destination
-    public function create($name, $description, $picture)
+    public function create($ownerId, $name, $description, $picture)
     {
         $id = Uuid::uuid4();
-        $stmt = $this->db->prepare("INSERT INTO destinations (id, name, description, picture) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$id, $name, $description, $picture]);
-        return ['id' => $id, 'name' => $name, 'description' => $description, 'picture' => $picture];
+        $stmt = $this->db->prepare("INSERT INTO destinations (id, name, description, picture, owner_id) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$id, $name, $description, $picture, $ownerId]);
+        return ['ownerId' => $ownerId, 'id' => $id, 'name' => $name, 'description' => $description, 'picture' => $picture];
     }
 
     // Read all destinations
