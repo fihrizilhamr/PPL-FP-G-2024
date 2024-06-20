@@ -31,7 +31,7 @@ switch ($path) {
             echo json_encode($response);
         } elseif ($requestMethod == 'POST') {
             $data = json_decode(file_get_contents('php://input'), true);
-            $response = $destinationService->create($data['name'], $data['description'], $data['picture']);
+            $response = $destinationService->create($data['ownerId'], $data['name'], $data['description'], $data['picture']);
             echo json_encode($response);
         }
         break;
